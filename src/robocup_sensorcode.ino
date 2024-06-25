@@ -1,11 +1,10 @@
 #include <Arduino.h>
-
 #include <Adafruit_NeoPixel.h>
 #include <Servo.h>
 
 // Define the pin and number of LEDs in the ring
 #define LED_PIN    6
-#define NUM_LEDS   16 // Adjust this to the number of LEDs in your ring
+#define NUM_LEDS   12 // Adjust this to the number of LEDs in your ring
 
 // Define the pin for the single LED
 #define LASER_PIN 13
@@ -44,7 +43,7 @@ void setup() {
 
   // Initialize serial communication
   Serial.begin(9600);
-  Serial.println("Enter commands: LAS_ON, LAS_OFF, RING_ON, RING_OFF, HALL_ON, HALL_OFF, BRI<0-255>, SER<0-180>");
+  Serial.println("Enter commands: LASER_ON, LASER_OFF, RING_ON, RING_OFF, HALL_ON, HALL_OFF, BRIGHTNESS <0-255>, SERVO<0-180>");
 }
 
 void loop() {
@@ -57,42 +56,41 @@ void loop() {
     if (command.equalsIgnoreCase("LASER_ON")) {
       laserOn = true;
       digitalWrite(LASER_PIN, HIGH); // Turn the Laser on
-      Serial.println("Laser is ON");
+    //  Serial.println("Laser is ON");
     } else if (command.equalsIgnoreCase("LASER_OFF")) {
       laserOn = false;
       digitalWrite(LASER_PIN, LOW); // Turn the Laser off
-      Serial.println("Laser is OFF");
+    //  Serial.println("Laser is OFF");
     } 
     // Handle the commands for the LED ring
     else if (command.equalsIgnoreCase("RING_ON")) {
       ringLedOn = true;
       applyLEDState();
-      Serial.println("LED ring is ON");
+    //  Serial.println("LED ring is ON");
     } else if (command.equalsIgnoreCase("RING_OFF")) {
       ringLedOn = false;
       applyLEDState();
-      Serial.println("LED ring is OFF");
-    } else if (command.startsWith("BRI")) {
-      int value = command.substring(4).toInt();
+    //  Serial.println("LED ring is OFF");
+    } else if (command.startsWith("BRIGHTNESS ") && ringLedOn) {
+      int value = command.substring(11).toInt();
       if (value >= 0 && value <= 255) {
         brightness = value;
         applyLEDState();
-        Serial.print("Brightness set to ");
-        Serial.println(brightness);
+      //  Serial.print("Brightness set to ");
+      //  Serial.println(brightness);
       } else {
-        Serial.println("Invalid brightness value. Use a value between 0 and 255.");
+      //  Serial.println("Invalid brightness value. Use a value between 0 and 255.");
       }
     } 
     // Handle the commands for the servo motor
-    else if (command.startsWith("SER")) {
-      int angle = command.substring(4).toInt();
+    else if (command.startsWith("SERVO ")) {
+      int angle = command.substring(6).toInt();
       if (angle >= 0 && angle <= 180) {
         servoAngle = angle;
         myServo.write(servoAngle);
-        Serial.println("Servo angle set to ");
-        Serial.println(servoAngle);
+      //  Serial.println("Servo angle set to " + servoAngle);
       } else {
-        Serial.println("Invalid servo angle. Use a value between 0 and 180.");
+      //  Serial.println("Invalid servo angle. Use a value between 0 and 180.");
       }
     } 
     // Handle the commands for the Hall sensor
@@ -105,10 +103,10 @@ void loop() {
         Serial.println("No magnet deteced");
       }
       delay(300); // Adjust the delay as needed
-    } else if (command.equalsIgnoreCase("LASER_OFF")) {
-        Serial.println("Hall sensor is now disabled");
-    } else {
-      Serial.println("Invalid command. Use SINGLE_ON, SINGLE_OFF, RING_ON, RING_OFF, HALL_ON, HALL_OFF, BRIGHTNESS <0-255>, SERVO <0-180>.");
+    } else if (command.equalsIgnoreCase("HALL_OFF")) {
+      //  Serial.println("Hall sensor is now disabled");
+    } else if (command.equalsIgnoreCase("HELP") or command.equalsIgnoreCase("COMMANDS")) {
+      Serial.println("Enter commands: LASER_ON, LASER_OFF, RING_ON, RING_OFF, HALL_ON, HALL_OFF, BRIGHTNESS <0-255>, SERVO<0-180>");
     }
   }
 }
