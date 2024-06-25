@@ -43,7 +43,7 @@ void setup() {
 
   // Initialize serial communication
   Serial.begin(9600);
-  Serial.println("Enter commands: LASER_ON, LASER_OFF, RING_ON, RING_OFF, HALL_ON, HALL_OFF, BRIGHTNESS <0-255>, SERVO<0-180>");
+  Serial.println("Enter commands: LASER_ON, LASER_OFF, RING_ON, RING_OFF, HALL_ON, HALL_OFF, BRIGHTNESS <0-255>, SERVO <0-180>");
 }
 
 void loop() {
@@ -106,7 +106,7 @@ void loop() {
     } else if (command.equalsIgnoreCase("HALL_OFF")) {
       //  Serial.println("Hall sensor is now disabled");
     } else if (command.equalsIgnoreCase("HELP") or command.equalsIgnoreCase("COMMANDS")) {
-      Serial.println("Enter commands: LASER_ON, LASER_OFF, RING_ON, RING_OFF, HALL_ON, HALL_OFF, BRIGHTNESS <0-255>, SERVO<0-180>");
+      Serial.println("Enter commands: LASER_ON, LASER_OFF, RING_ON, RING_OFF, HALL_ON, HALL_OFF, BRIGHTNESS <0-255>, SERVO <0-180>");
     }
   }
 }
