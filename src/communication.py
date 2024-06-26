@@ -1,7 +1,7 @@
 import serial
 import time
 
-arduino = serial.Serial(port='COM6',  baudrate=9600, timeout=1) #"/dev/ttyUSB0" for linux and "COM6" for Windows
+arduino = serial.Serial(port='/dev/ttyUSB0',  baudrate=9600, timeout=1) #"/dev/ttyUSB0" for linux and "COM6" for Windows
 
 
 def write_read(x):

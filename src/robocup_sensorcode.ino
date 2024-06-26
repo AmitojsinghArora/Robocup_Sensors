@@ -95,16 +95,28 @@ void loop() {
     } 
     // Handle the commands for the Hall sensor
     else if (command.equalsIgnoreCase("HALL_ON")) {
-      // Read the Hall sensor value
-      int magnetDetection = digitalRead(HALL_SENSOR_PIN);
-       if (magnetDetection == HIGH) {
-        Serial.println("Magnet detected");
-      } else {
-        Serial.println("No magnet deteced");
+      hallON = true;
+      while (hallON) {
+        // Read the Hall sensor value
+        int magnetDetection = digitalRead(HALL_SENSOR_PIN);
+        if (magnetDetection == HIGH) {
+          Serial.println("Magnet detected");
+        } else {
+          Serial.println("No magnet detected");
+        }
+        delay(100); // Adjust the delay as needed
+
+        // Check for incoming serial commands while the Hall sensor is on
+        if (Serial.available() > 0) {
+          String newCommand = Serial.readStringUntil('\n');
+          newCommand.trim();
+          if (newCommand.equalsIgnoreCase("HALL_OFF")) {
+            hallON = false;
+          }
+        }
       }
-      delay(300); // Adjust the delay as needed
     } else if (command.equalsIgnoreCase("HALL_OFF")) {
-      //  Serial.println("Hall sensor is now disabled");
+      hallON = false;//  Serial.println("Hall sensor is now disabled");
     } else if (command.equalsIgnoreCase("HELP") or command.equalsIgnoreCase("COMMANDS")) {
       Serial.println("Enter commands: LASER_ON, LASER_OFF, RING_ON, RING_OFF, HALL_ON, HALL_OFF, BRIGHTNESS <0-255>, SERVO <0-180>");
     }
